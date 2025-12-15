@@ -4,7 +4,255 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Milk Farm</title>
-    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
+    }
+
+    /* Navbar */
+    .navbar {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .navbar h1 {
+        font-size: 24px;
+    }
+
+    .navbar a {
+        margin-left: 15px;
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-nav {
+        background: rgba(255,255,255,0.2);
+        padding: 8px 15px;
+        border-radius: 5px;
+        transition: background 0.3s;
+    }
+
+    .btn-nav:hover {
+        background: rgba(255,255,255,0.3);
+    }
+
+    /* Layout container */
+    .container {
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 20px;
+    }
+
+    /* Auth forms (login/register) */
+    .form-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 100px);
+    }
+
+    .form-box {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .form-box h2 {
+        margin-bottom: 20px;
+        text-align: center;
+        color: #667eea;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+    }
+
+    /* Buttons */
+    .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .form-box p {
+        text-align: center;
+        margin-top: 15px;
+    }
+
+    .form-box a {
+        color: #667eea;
+        text-decoration: none;
+    }
+
+    .form-box a:hover {
+        text-decoration: underline;
+    }
+
+    /* Dashboard grid (4 cards) */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+        gap: 25px;
+        margin-top: 30px;
+    }
+
+    /* Individual card */
+    .card {
+        background: white;
+        padding: 30px;
+        border-radius: 14px;
+        box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+        transform: scale(1.02);
+    }
+
+    /* TITLE in card */
+    .card h3 {
+        color: #667eea;
+        margin-bottom: 15px;
+    }
+
+    /* FORM LAYOUT INSIDE CARD – spacing between inputs */
+    .card form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 8px;
+    }
+
+    .card form input,
+    .card form select {
+        flex: 1;
+        min-width: 140px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    /* Make the action button on its own row */
+    .card form .btn-primary {
+        flex-basis: 100%;
+        margin-top: 8px;
+    }
+
+    /* Tables in cards */
+    .card table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    .card table th,
+    .card table td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+
+    .card table th {
+        background: #f5f5f5;
+        font-weight: 600;
+        color: #667eea;
+    }
+
+    .card table tr:hover {
+        background: #f9f9f9;
+    }
+
+    /* Scrollable tables in dashboard cards (Your Cattle, Milk Records) */
+    .table-scroll {
+        max-height: 260px;
+        overflow-y: auto;
+        margin-top: 10px;
+    }
+
+    /* Sticky header when scrolling */
+    .table-scroll thead th {
+        position: sticky;
+        top: 0;
+        background: #f5f5f5;
+        z-index: 1;
+    }
+
+    /* General headings / text */
+    h2 {
+        text-align: center;
+        color: white;
+        margin-bottom: 20px;
+    }
+
+    .container > p {
+        color: white;
+        text-align: center;
+        font-size: 16px;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 768px) {
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .navbar {
+            flex-direction: column;
+            gap: 10px;
+        }
+    }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -109,185 +357,11 @@
     </div>
 
     <script src="js/script.js"></script>
-    <script>
-        // Load cattle and milk data on page load
-        window.addEventListener('load', () => {
-            loadCattle();
-            loadMilkRecords();
-        });
+    <!-- your existing JS block here (unchanged) -->
+    <!-- ... keep all your <script> logic as you had it ... -->
 
-        // Add cattle form submission
-        document.getElementById('cattle-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const cattle_name = document.getElementById('cattle_name').value;
-            const breed = document.getElementById('breed').value;
-            const age = document.getElementById('age').value;
-            const weight = document.getElementById('weight').value;
-            const status = document.getElementById('status').value;
-
-            const response = await fetch('/api/farm/add-cattle', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ cattle_name, breed, age, weight, status })
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                alert(data.message);
-                document.getElementById('cattle-form').reset();
-                loadCattle();
-            } else {
-                alert(data.message);
-            }
-        });
-
-        // Load cattle
-        async function loadCattle() {
-            const response = await fetch('/api/farm/cattle');
-            const cattle = await response.json();
-
-            const tableBody = document.getElementById('cattle-body');
-            const selectBox = document.getElementById('cattle_id');
-            const summarySelect = document.getElementById('summary_cattle_id');
-
-            tableBody.innerHTML = '';
-            selectBox.innerHTML = '<option value="">Select Cattle</option>';
-            summarySelect.innerHTML = '<option value="">Select Cattle</option>';
-
-            cattle.forEach(c => {
-                const row = `<tr>
-                    <td>${c.cattle_name}</td>
-                    <td>${c.breed}</td>
-                    <td>${c.age}</td>
-                    <td>${c.weight}</td>
-                    <td>${c.status}</td>
-                </tr>`;
-                tableBody.innerHTML += row;
-
-                const option1 = document.createElement('option');
-                option1.value = c.id;
-                option1.textContent = c.cattle_name;
-                selectBox.appendChild(option1);
-
-                const option2 = document.createElement('option');
-                option2.value = c.id;
-                option2.textContent = c.cattle_name;
-                summarySelect.appendChild(option2);
-            });
-        }
-
-        // Add milk record
-        document.getElementById('milk-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const cattle_id = document.getElementById('cattle_id').value;
-            const quantity = document.getElementById('quantity').value;
-            const date_recorded = document.getElementById('date_recorded').value;
-            const time_recorded = document.getElementById('time_recorded').value;
-            const quality = document.getElementById('quality').value;
-
-            if (!time_recorded) {
-                alert('Please select a time');
-                return;
-            }
-
-            const response = await fetch('/api/farm/add-milk-record', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ cattle_id, quantity, date_recorded, time_recorded, quality })
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                alert(data.message);
-                document.getElementById('milk-form').reset();
-                loadMilkRecords();
-            } else {
-                alert(data.message);
-            }
-        });
-
-        // Load milk records with formatted date & time
-        async function loadMilkRecords() {
-            const response = await fetch('/api/farm/milk-records');
-            const records = await response.json();
-
-            const tableBody = document.getElementById('milk-body');
-            tableBody.innerHTML = '';
-
-            records.forEach(r => {
-                const d = new Date(r.date_recorded);
-                const dateStr = d.toLocaleDateString();
-                const timeStr = d.toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-
-                const row = `<tr>
-                    <td>${r.cattle_name}</td>
-                    <td>${r.quantity}</td>
-                    <td>${dateStr} ${timeStr}</td>
-                    <td>${r.quality}</td>
-                </tr>`;
-                tableBody.innerHTML += row;
-            });
-        }
-
-        // Milk summary form
-        document.getElementById('summary-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const cattle_id = document.getElementById('summary_cattle_id').value;
-            const start_date = document.getElementById('summary_start_date').value;
-            const end_date = document.getElementById('summary_end_date').value;
-            const resultEl = document.getElementById('summary-result');
-
-            if (!cattle_id || !start_date || !end_date) {
-                alert('Please select cattle and both dates');
-                return;
-            }
-
-            const params = new URLSearchParams({ cattle_id, start_date, end_date });
-            const response = await fetch(`/api/farm/milk-total?${params.toString()}`);
-            const data = await response.json();
-
-            if (!response.ok) {
-                alert(data.message || 'Error calculating total');
-                return;
-            }
-
-            resultEl.textContent = `Total milk produced: ${data.total_quantity} liters between ${start_date} and ${end_date}`;
-        });
-
-        // Logout
-        document.getElementById('logout-btn').addEventListener('click', async (e) => {
-            e.preventDefault();
-            await fetch('/api/auth/logout');
-            window.location.href = 'index.html';
-        });
-
-        // Load user info
-        window.addEventListener('load', async () => {
-            const response = await fetch('/api/auth/check-session');
-            const data = await response.json();
-
-            if (data.loggedIn) {
-                document.getElementById('user-info').textContent = `Welcome, ${data.user.name}`;
-            } else {
-                window.location.href = 'login.html';
-            }
-        });
-    </script>
     <footer style="text-align:center; padding:10px 0; color:#fff; opacity:0.8;">
-    © <span id="year"></span> Lokeshwaran. All rights reserved.
-</footer>
-
+        © <span id="year"></span> Lokeshwaran. All rights reserved.
+    </footer>
 </body>
 </html>
