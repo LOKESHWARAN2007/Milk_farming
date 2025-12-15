@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Milk Farm</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <h1>🐄 Dashboard</h1>
+        <div>
+            <span id="user-info"></span>
+            <a href="#" id="logout-btn" class="btn-nav">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="dashboard-grid">
+            <!-- Add Cattle Section -->
+            <div class="card">
+                <h3>Add Cattle</h3>
+                <form id="cattle-form">
+                    <input type="text" placeholder="Cattle Name" id="cattle_name" required>
+                    <input type="text" placeholder="Breed" id="breed">
+                    <input type="number" placeholder="Age" id="age">
+                    <input type="number" placeholder="Weight (kg)" id="weight" step="0.01">
+                    <select id="status">
+                        <option value="healthy">Healthy</option>
+                        <option value="sick">Sick</option>
+                        <option value="lactating">Lactating</option>
+                    </select>
+                    <button type="submit" class="btn-primary">Add Cattle</button>
+                </form>
+            </div>
+
+            <!-- Cattle List Section -->
+            <div class="card">
+                <h3>Your Cattle</h3>
+                <div class="table-scroll">
+                    <table id="cattle-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Breed</th>
+                                <th>Age</th>
+                                <th>Weight</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cattle-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Add Milk Record Section -->
+            <div class="card">
+                <h3>Record Milk Production</h3>
+                <form id="milk-form">
+                    <select id="cattle_id" required>
+                        <option value="">Select Cattle</option>
+                    </select>
+                    <input type="number" placeholder="Quantity (liters)" id="quantity" step="0.1" required>
+                    <input type="date" id="date_recorded" required>
+                    <input type="time" id="time_recorded" required>
+                    <select id="quality">
+                        <option value="premium">Premium</option>
+                        <option value="standard">Standard</option>
+                        <option value="low">Low</option>
+                    </select>
+                    <button type="submit" class="btn-primary">Record Milk</button>
+                </form>
+            </div>
+
+            <!-- Milk Records Section -->
+            <div class="card">
+                <h3>Milk Records</h3>
+                <div class="table-scroll">
+                    <table id="milk-table">
+                        <thead>
+                            <tr>
+                                <th>Cattle</th>
+                                <th>Quantity (L)</th>
+                                <th>Date & Time</th>
+                                <th>Quality</th>
+                            </tr>
+                        </thead>
+                        <tbody id="milk-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Milk Summary Section -->
+            <div class="card">
+                <h3>Milk Summary (By Cattle)</h3>
+                <form id="summary-form">
+                    <select id="summary_cattle_id" required>
+                        <option value="">Select Cattle</option>
+                    </select>
+                    <input type="date" id="summary_start_date" required>
+                    <input type="date" id="summary_end_date" required>
+                    <button type="submit" class="btn-primary">Sum Up</button>
+                </form>
+                <p id="summary-result" style="margin-top:10px;font-weight:600;"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        // Load cattle and milk data on page load
+        window.addEventListener('load', () => {
+            loadCattle();
+            loadMilkRecords();
+        });
+
+        // Add cattle form submission
+        document.getElementById('cattle-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const cattle_name = document.getElementById('cattle_name').value;
+            const breed = document.getElementById('breed').value;
+            const age = document.getElementById('age').value;
+            const weight = document.getElementById('weight').value;
+            const status = document.getElementById('status').value;
+
+            const response = await fetch('/api/farm/add-cattle', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ cattle_name, breed, age, weight, status })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert(data.message);
+                document.getElementById('cattle-form').reset();
+                loadCattle();
+            } else {
+                alert(data.message);
+            }
+        });
+
+        // Load cattle
+        async function loadCattle() {
+            const response = await fetch('/api/farm/cattle');
+            const cattle = await response.json();
+
+            const tableBody = document.getElementById('cattle-body');
+            const selectBox = document.getElementById('cattle_id');
+            const summarySelect = document.getElementById('summary_cattle_id');
+
+            tableBody.innerHTML = '';
+            selectBox.innerHTML = '<option value="">Select Cattle</option>';
+            summarySelect.innerHTML = '<option value="">Select Cattle</option>';
+
+            cattle.forEach(c => {
+                const row = `<tr>
+                    <td>${c.cattle_name}</td>
+                    <td>${c.breed}</td>
+                    <td>${c.age}</td>
+                    <td>${c.weight}</td>
+                    <td>${c.status}</td>
+                </tr>`;
+                tableBody.innerHTML += row;
+
+                const option1 = document.createElement('option');
+                option1.value = c.id;
+                option1.textContent = c.cattle_name;
+                selectBox.appendChild(option1);
+
+                const option2 = document.createElement('option');
+                option2.value = c.id;
+                option2.textContent = c.cattle_name;
+                summarySelect.appendChild(option2);
+            });
+        }
+
+        // Add milk record
+        document.getElementById('milk-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const cattle_id = document.getElementById('cattle_id').value;
+            const quantity = document.getElementById('quantity').value;
+            const date_recorded = document.getElementById('date_recorded').value;
+            const time_recorded = document.getElementById('time_recorded').value;
+            const quality = document.getElementById('quality').value;
+
+            if (!time_recorded) {
+                alert('Please select a time');
+                return;
+            }
+
+            const response = await fetch('/api/farm/add-milk-record', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ cattle_id, quantity, date_recorded, time_recorded, quality })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert(data.message);
+                document.getElementById('milk-form').reset();
+                loadMilkRecords();
+            } else {
+                alert(data.message);
+            }
+        });
+
+        // Load milk records with formatted date & time
+        async function loadMilkRecords() {
+            const response = await fetch('/api/farm/milk-records');
+            const records = await response.json();
+
+            const tableBody = document.getElementById('milk-body');
+            tableBody.innerHTML = '';
+
+            records.forEach(r => {
+                const d = new Date(r.date_recorded);
+                const dateStr = d.toLocaleDateString();
+                const timeStr = d.toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                const row = `<tr>
+                    <td>${r.cattle_name}</td>
+                    <td>${r.quantity}</td>
+                    <td>${dateStr} ${timeStr}</td>
+                    <td>${r.quality}</td>
+                </tr>`;
+                tableBody.innerHTML += row;
+            });
+        }
+
+        // Milk summary form
+        document.getElementById('summary-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const cattle_id = document.getElementById('summary_cattle_id').value;
+            const start_date = document.getElementById('summary_start_date').value;
+            const end_date = document.getElementById('summary_end_date').value;
+            const resultEl = document.getElementById('summary-result');
+
+            if (!cattle_id || !start_date || !end_date) {
+                alert('Please select cattle and both dates');
+                return;
+            }
+
+            const params = new URLSearchParams({ cattle_id, start_date, end_date });
+            const response = await fetch(`/api/farm/milk-total?${params.toString()}`);
+            const data = await response.json();
+
+            if (!response.ok) {
+                alert(data.message || 'Error calculating total');
+                return;
+            }
+
+            resultEl.textContent = `Total milk produced: ${data.total_quantity} liters between ${start_date} and ${end_date}`;
+        });
+
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            await fetch('/api/auth/logout');
+            window.location.href = 'index.html';
+        });
+
+        // Load user info
+        window.addEventListener('load', async () => {
+            const response = await fetch('/api/auth/check-session');
+            const data = await response.json();
+
+            if (data.loggedIn) {
+                document.getElementById('user-info').textContent = `Welcome, ${data.user.name}`;
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+    <footer style="text-align:center; padding:10px 0; color:#fff; opacity:0.8;">
+    © <span id="year"></span> Lokeshwaran. All rights reserved.
+</footer>
+
+</body>
+</html>
