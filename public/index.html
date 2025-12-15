@@ -4,15 +4,111 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Milk Farm Management System</title>
-    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
+    }
+
+    .navbar {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .navbar h1 {
+        font-size: 24px;
+    }
+
+    .navbar a {
+        margin-left: 15px;
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-nav {
+        background: rgba(255,255,255,0.2);
+        padding: 8px 15px;
+        border-radius: 5px;
+        transition: background 0.3s;
+    }
+
+    .btn-nav:hover {
+        background: rgba(255,255,255,0.3);
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 20px;
+        text-align: center;
+    }
+
+    h2 {
+        color: white;
+        margin-bottom: 20px;
+    }
+
+    .container > p {
+        color: white;
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+
+    .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 30px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    footer {
+        text-align: center;
+        padding: 10px 0;
+        color: #fff;
+        opacity: 0.8;
+    }
+
+    @media (max-width: 768px) {
+        .navbar {
+            flex-direction: column;
+            gap: 10px;
+        }
+    }
+    </style>
 </head>
 <body>
     <nav class="navbar">
         <h1>🐄 Milk Farm Management</h1>
         <div id="nav-links">
-           <a href="login.html" class="btn-nav">Login</a>
-           <a href="register.html" class="btn-nav">Register</a>
-
+            <a href="login.html" class="btn-nav">Login</a>
+            <a href="register.html" class="btn-nav">Register</a>
         </div>
         <div id="user-menu" style="display:none;">
             <span id="user-name"></span>
@@ -23,14 +119,13 @@
     <div class="container">
         <h2>Welcome to Milk Farm Management System</h2>
         <p>Manage your dairy farm efficiently with our comprehensive tracking system.</p>
-        <center><a href="login.html" class="btn-primary" style="margin-top: 20px; display: inline-block; padding: 12px 30px; text-decoration: none;">Get Started</a></center>
-
+        <a href="login.html" class="btn-primary">Get Started</a>
     </div>
 
     <script src="js/script.js"></script>
-    <footer style="text-align:center; padding:10px 0; color:#fff; opacity:0.8;">
-    © <span id="year"></span> Lokeshwaran. All rights reserved.
-</footer>
 
+    <footer>
+        © <span id="year"></span> Lokeshwaran. All rights reserved.
+    </footer>
 </body>
 </html>
