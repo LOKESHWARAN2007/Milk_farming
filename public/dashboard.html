@@ -110,10 +110,44 @@
 
     <script src="js/script.js"></script>
     <script>
-        // Load cattle and milk data on page load
+        // NEW: Set current date and time automatically - FIXES THE 5:30 BUG
+        function setCurrentDateTime() {
+            const now = new Date();
+            const dateInput = document.getElementById('date_recorded');
+            const timeInput = document.getElementById('time_recorded');
+            
+            // Set date (YYYY-MM-DD format)
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            dateInput.value = `${year}-${month}-${day}`;
+            
+            // Set time (HH:MM format, 24-hour) - THIS SOLVES THE DEFAULT 5:30 ISSUE
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            timeInput.value = `${hours}:${minutes}`;
+        }
+
+        // NEW: Update time every minute while form is visible
+        setInterval(() => {
+            if (document.getElementById('milk-form')) {
+                setCurrentDateTime();
+            }
+        }, 60000); // Update every minute
+
+        // NEW: Reset time when date changes
+        document.getElementById('date_recorded').addEventListener('change', function() {
+            const timeInput = document.getElementById('time_recorded');
+            if (!timeInput.value) {
+                timeInput.value = '00:00';
+            }
+        });
+
+        // Load cattle and milk data on page load (UPDATED)
         window.addEventListener('load', () => {
             loadCattle();
             loadMilkRecords();
+            setCurrentDateTime();  // NEW: Set current time on load
         });
 
         // Add cattle form submission
@@ -291,4 +325,3 @@
 
 </body>
 </html>
-
